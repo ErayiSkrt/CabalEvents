@@ -1,0 +1,75 @@
+#background {
+  /*background: linear-gradient(to bottom right, #222, #555);*/
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 400px;
+  max-width: 1080;
+  /*justify-content: center;*/
+  flex-direction: column;
+}
+.horizontalLine {
+  width: 100%;
+  border-bottom: 5px solid gray;
+  margin: 20 0 20 0;
+}
+#eventsContainer {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 20px;
+}
+#eventSelection {
+  width: 550;
+  height: 100;
+  color: red;
+  text-align: center;
+  background-color: yellowgreen;
+  font-size: 36px;
+  margin-top: 20px;
+  border-radius: 35%;
+  border-color: goldenrod;
+  border-width: 5px;
+}
+
+#title {
+  color: rgb(34, 13, 224);
+  margin: 0;
+  padding: 10px 100px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 40px;
+  font-weight: normal;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+#selectText {
+  color: rgb(34, 13, 224);
+  margin: 0;
+  padding: 10px 30px;
+  text-align: center;
+  text-transform: uppercase;
+  word-wrap: unset;
+  font-size: 36px;
+  font-weight: normal;
+  margin-top: 45px;
+  margin-bottom: 20px;
+  margin-left: -60px;
+}
+#start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px; /* Adjust the width as needed */
+  height: 120px; /* Adjust the height as needed */
+  color: orange;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 20px;
+  background-color: rgb(48, 182, 226);
+  border: 5px solid yellowgreen;
+  border-radius: 35%;
+  cursor: pointer;
+}

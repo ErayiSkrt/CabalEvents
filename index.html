@@ -1,36 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <style>
-      body {
-        margin: 0;
-      }
-      canvas {
-        display: block;
-        background: blue;
-      }
-    </style>
+    <link rel="stylesheet" href="myStyle.css" />
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
   </head>
   <body>
-    <canvas id="myCanvas"></canvas>
-    <script src="js/pixi.js"></script>
-    <script type="text/javascript">
-      const canvas = document.getElementById("myCanvas");
-
-      const app = new PIXI.Application({
-        view: canvas,
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-      const texture = PIXI.Texture.from("backgraund.png");
-      const img = new PIXI.Sprite(texture);
-      img.x = app.render.width / 2;
-      img.y = app.render.height / 2;
-      img.anchor.set(0.5);
-      app.stage.addChild(img);
-    </script>
+    <script src="dist/bundle.js"></script>
   </body>
 </html>

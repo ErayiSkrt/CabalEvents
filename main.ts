@@ -1,9 +1,5 @@
-import * as PIXI from "js/pi";
+import { MainView } from "./src/MainView";
 
 window.onload = () => {
-  app();
+  const mainView = new MainView(document);
 };
-
-function app() {
-  const app = new PIXI.Ap();
-}
