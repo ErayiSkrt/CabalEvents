@@ -11,6 +11,27 @@
   /*justify-content: center;*/
   flex-direction: column;
 }
+#popupBackground {
+  background: linear-gradient(to bottom right, yellow, orange);
+  border: 10px solid silver; /* Adjust the border width as needed */
+  box-sizing: border-box;
+  width: 60%; /* Set the width as a percentage of the window width */
+  height: 60vh; /* Set the height as a percentage of the window height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#overLay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .horizontalLine {
   width: 100%;
   border-bottom: 5px solid gray;

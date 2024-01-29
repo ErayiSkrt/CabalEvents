@@ -6,10 +6,15 @@ export class MainView {
   protected selectedOption = "";
   protected mainDiv: HTMLDivElement;
   protected selectionUrl: string;
+  protected selectOptions: Array<string>;
+  public characterList: Array<string>;
+  public charfetchUrl: string;
 
-  protected charSelectView: CharSelection;
+  public charSelectView!: CharSelection;
+
   constructor(document: Document) {
-    this.selectionUrl = "https://firstservice-emyq.onrender.com/loadEvents"
+    this.selectOptions = [];
+    this.selectionUrl = "https://firstservice-emyq.onrender.com/loadEvents";
     this.doc = document;
     this.background = this.doc.createElement("div");
     this.background.id = "background";
@@ -17,18 +22,23 @@ export class MainView {
     this.background.style.background = "url('images/background.png')";
     this.mainDiv = this.doc.createElement("div");
     this.background.appendChild(this.mainDiv);
-    this.addMainDivElements();
-    this.charSelectView = this.addCharSelection();
+    this.characterList = [];
+    this.charfetchUrl = "https://firstservice-emyq.onrender.com/loadCharacters";
+    fetch(this.selectionUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((name: { eventName: string }) => {
+          this.selectOptions.push(name.eventName);
+        });
+        this.addMainDivElements();
+      });
   }
 
   protected addCharSelection(): CharSelection {
-    return new CharSelection(this.background, this.doc);
+    return new CharSelection(this.background, this.characterList, this.doc);
   }
 
   public addMainDivElements(): void {
-    fetch(this.selectionUrl).then(response => response.json()).then((data) => {
-      console.log(data);
-    });
     this.addTitle();
     this.horizontalLine();
     this.initSelection();
@@ -60,7 +70,6 @@ export class MainView {
   }
 
   public initSelection(): void {
-    const selectionOptions = ["option1", "option2", "option3"];
     const selectionContainer = this.doc.createElement("div");
     selectionContainer.id = "eventsContainer";
     this.mainDiv.appendChild(selectionContainer);
@@ -76,11 +85,11 @@ export class MainView {
     eventSelection.appendChild(defaultOption);
 
     let count = 0;
-    for (const option in selectionOptions) {
+    for (const option in this.selectOptions) {
       count++;
       const createOption = this.doc.createElement("option");
-      createOption.value = selectionOptions[option].toUpperCase();
-      createOption.text = selectionOptions[option].toUpperCase();
+      createOption.value = this.selectOptions[option].toUpperCase();
+      createOption.text = this.selectOptions[option].toUpperCase();
       eventSelection.appendChild(createOption);
     }
 
@@ -96,10 +105,20 @@ export class MainView {
     button.id = "start";
     button.innerHTML = "START APP";
     this.mainDiv.appendChild(button);
-
+    let clicked = false;
     button.addEventListener("pointerup", () => {
-      if(this.selectedOption != ""){
-        this.hideCabalEventsScreen();
+      if (clicked) return;
+      if (this.selectedOption != "") {
+        clicked = true;
+        fetch(this.charfetchUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            data.forEach((name: string) => {
+              this.characterList.push(name);
+            });
+            this.charSelectView = this.addCharSelection();
+            this.hideCabalEventsScreen();
+          });
       }
     });
   }
@@ -108,4 +127,14 @@ export class MainView {
     this.mainDiv.style.display = "none";
     this.charSelectView.showCharSelection();
   }
+
+  public getcharsList() {
+    return this.characterList;
+  }
+
+  public setcharacters(charsList: Array<string>) {
+    this.characterList = charsList;
+  }
 }
+
+export default MainView;

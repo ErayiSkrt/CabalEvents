@@ -1,12 +1,22 @@
+import { MainView } from "../../MainView";
+import { AddCharPopup } from "../popup/AddcharPopup";
+
 export class CharSelection {
   protected bkgr: HTMLDivElement;
   protected doc: Document;
   public selectionView: HTMLDivElement;
   protected selectedChar: string = "";
-  protected charList: Array<string> = [];
-  constructor(background: HTMLDivElement, document: Document) {
+  protected charSelection: HTMLSelectElement;
+  protected characterList: Array<string>;
+  constructor(
+    background: HTMLDivElement,
+    chars: Array<any>,
+    document: Document
+  ) {
     this.bkgr = background;
     this.doc = document;
+    this.characterList = chars;
+    this.charSelection = this.doc.createElement("select");
     this.selectionView = this.doc.createElement("div");
     this.bkgr.appendChild(this.selectionView);
     this.selectionView.style.display = "none";
@@ -48,13 +58,11 @@ export class CharSelection {
   }
 
   public initSelection(): void {
-    this.charList = ["char1", "char2", "char2"];
     const selectionContainer = this.doc.createElement("div");
     selectionContainer.id = "eventsContainer";
     this.selectionView.appendChild(selectionContainer);
     this.addSelectonText(selectionContainer);
-    const CharSelection = this.doc.createElement("select");
-    CharSelection.id = "eventSelection";
+    this.charSelection.id = "eventSelection";
 
     const defaultOption = this.doc.createElement("option");
     defaultOption.value = "";
@@ -62,20 +70,41 @@ export class CharSelection {
     defaultOption.disabled = true;
     defaultOption.selected = true;
     this.selectedChar = defaultOption.value;
-    CharSelection.appendChild(defaultOption);
+    this.charSelection.appendChild(defaultOption);
 
-    for (const option in this.charList) {
+    const charList = this.characterList;
+    for (const option in charList) {
       const createOption = this.doc.createElement("option");
-      createOption.value = this.charList[option].toUpperCase();
-      createOption.text = this.charList[option].toUpperCase();
-      CharSelection.appendChild(createOption);
+      createOption.value = charList[option].toUpperCase();
+      createOption.text = charList[option].toUpperCase();
+      this.charSelection.appendChild(createOption);
     }
 
-    selectionContainer?.appendChild(CharSelection);
+    selectionContainer?.appendChild(this.charSelection);
 
-    CharSelection.addEventListener("change", () => {
-      this.selectedChar = CharSelection.value;
+    this.charSelection.addEventListener("change", () => {
+      this.selectedChar = this.charSelection.value;
     });
+  }
+
+  public updateCharSelection(): void {
+    const url = "https://firstservice-emyq.onrender.com/loadCharacters";
+    this.charSelection.innerHTML = "";
+    this.characterList = [];
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((name: string) => {
+          this.characterList.push(name);
+        });
+        const chars = this.characterList;
+        for (const option in this.characterList) {
+          const createOption = this.doc.createElement("option");
+          createOption.value = this.characterList[option].toUpperCase();
+          createOption.text = this.characterList[option].toUpperCase();
+          this.charSelection.appendChild(createOption);
+        }
+      });
   }
 
   protected addCharButton(): void {
@@ -84,7 +113,18 @@ export class CharSelection {
     button.innerHTML = "Add Character";
     this.selectionView.appendChild(button);
 
-    button.addEventListener("pointerup", () => {});
+    button.addEventListener("pointerup", () => {
+      new AddCharPopup(
+        "Add a character",
+        this.selectionView,
+        "CONFIRM",
+        true,
+        () => {
+          this.updateCharSelection();
+        },
+        this.characterList
+      );
+    });
   }
 
   protected confirmButton(): void {
@@ -94,8 +134,8 @@ export class CharSelection {
     this.selectionView.appendChild(button);
 
     button.addEventListener("pointerup", () => {
-      if(this.selectedChar != ""){
-        	this.hideCharSelectionView();
+      if (this.selectedChar != "") {
+        this.hideCharSelectionView();
       }
     });
   }
@@ -104,3 +144,5 @@ export class CharSelection {
     this.selectionView.style.display = "none";
   }
 }
+
+export default CharSelection;
