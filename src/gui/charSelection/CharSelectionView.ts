@@ -50,17 +50,18 @@ export class CharSelection {
   public initSelection(): void {
     this.charList = ["char1", "char2", "char2"];
     const selectionContainer = this.doc.createElement("div");
-    selectionContainer.id = "charContainer";
+    selectionContainer.id = "eventsContainer";
     this.selectionView.appendChild(selectionContainer);
     this.addSelectonText(selectionContainer);
     const CharSelection = this.doc.createElement("select");
-    CharSelection.id = "charSelection";
+    CharSelection.id = "eventSelection";
 
     const defaultOption = this.doc.createElement("option");
     defaultOption.value = "";
     defaultOption.text = "Select Char";
     defaultOption.disabled = true;
     defaultOption.selected = true;
+    this.selectedChar = defaultOption.value;
     CharSelection.appendChild(defaultOption);
 
     for (const option in this.charList) {
@@ -79,7 +80,7 @@ export class CharSelection {
 
   protected addCharButton(): void {
     const button = this.doc.createElement("div");
-    button.id = "addchar";
+    button.id = "start";
     button.innerHTML = "Add Character";
     this.selectionView.appendChild(button);
 
@@ -93,7 +94,9 @@ export class CharSelection {
     this.selectionView.appendChild(button);
 
     button.addEventListener("pointerup", () => {
-      this.hideCharSelectionView();
+      if(this.selectedChar != ""){
+        	this.hideCharSelectionView();
+      }
     });
   }
 

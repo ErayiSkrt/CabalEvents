@@ -5,9 +5,11 @@ export class MainView {
   protected background: HTMLDivElement;
   protected selectedOption = "";
   protected mainDiv: HTMLDivElement;
+  protected selectionUrl: string;
 
   protected charSelectView: CharSelection;
   constructor(document: Document) {
+    this.selectionUrl = "https://firstservice-emyq.onrender.com/loadEvents"
     this.doc = document;
     this.background = this.doc.createElement("div");
     this.background.id = "background";
@@ -24,6 +26,9 @@ export class MainView {
   }
 
   public addMainDivElements(): void {
+    fetch(this.selectionUrl).then(response => response.json()).then((data) => {
+      console.log(data);
+    });
     this.addTitle();
     this.horizontalLine();
     this.initSelection();
@@ -93,7 +98,9 @@ export class MainView {
     this.mainDiv.appendChild(button);
 
     button.addEventListener("pointerup", () => {
-      this.hideCabalEventsScreen();
+      if(this.selectedOption != ""){
+        this.hideCabalEventsScreen();
+      }
     });
   }
 
