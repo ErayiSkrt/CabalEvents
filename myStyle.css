@@ -19,7 +19,38 @@
   height: 60vh; /* Set the height as a percentage of the window height */
   display: flex;
   align-items: center;
+  flex-direction: column;
+}
+#popUpTitle {
+  color: red;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  align-self: center;
+
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 40px;
+  font-weight: normal;
+}
+#popupInput {
+  align-self: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#confirm {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  width: 300px; /* Adjust the width as needed */
+  height: 120px; /* Adjust the height as needed */
+  color: red;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 40px;
+  background-color: rgb(8, 12, 202);
+  border: 5px solid rgb(3, 201, 46);
+  border-radius: 35%;
+  cursor: pointer;
 }
 #overLay {
   position: fixed;
@@ -79,6 +110,16 @@
   margin-bottom: 20px;
   margin-left: -60px;
 }
+#startReturn {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+#charButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 #start {
   display: flex;
   align-items: center;
@@ -93,4 +134,72 @@
   border: 5px solid yellowgreen;
   border-radius: 35%;
   cursor: pointer;
+}
+#startApp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px; /* Adjust the width as needed */
+  height: 120px; /* Adjust the height as needed */
+  color: red;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 20px;
+  background-color: rgb(8, 12, 202);
+  border: 5px solid rgb(3, 201, 46);
+  border-radius: 35%;
+  cursor: pointer;
+}
+#addChar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px; /* Adjust the width as needed */
+  height: 120px; /* Adjust the height as needed */
+  color: orange;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 20px;
+  background-color: rgb(48, 182, 226);
+  border: 5px solid yellowgreen;
+  border-radius: 35%;
+  cursor: pointer;
+  margin-right: 20px;
+}
+#addChar:hover {
+  background-color: yellow;
+}
+#return {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px; /* Adjust the width as needed */
+  height: 120px; /* Adjust the height as needed */
+  color: red;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 20px;
+  background-color: rgb(8, 12, 202);
+  border: 5px solid rgb(3, 201, 46);
+  border-radius: 35%;
+  cursor: pointer;
+}
+#return:hover {
+  background-color: lightblue;
+}
+#startApp:hover {
+  background-color: lightblue;
+}
+#closeButton {
+  position: absolute;
+  top: 20.5%;
+  right: 20.5%;
+  font-size: 62px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: greenyellow;
+}
+#closeButton:hover {
+  color: green;
 }

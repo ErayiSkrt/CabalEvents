@@ -7,33 +7,34 @@ export class CharSelection {
   public selectionView: HTMLDivElement;
   protected selectedChar: string = "";
   protected charSelection: HTMLSelectElement;
-  protected characterList: Array<string>;
-  constructor(
-    background: HTMLDivElement,
-    chars: Array<any>,
-    document: Document
-  ) {
+  protected loadCharUrl =
+    /*"http://127.0.0.1:5000/loadCharacters";*/ "https://firstservice-emyq.onrender.com/loadCharacters";
+  constructor(background: HTMLDivElement, document: Document) {
     this.bkgr = background;
     this.doc = document;
-    this.characterList = chars;
     this.charSelection = this.doc.createElement("select");
     this.selectionView = this.doc.createElement("div");
     this.bkgr.appendChild(this.selectionView);
     this.selectionView.style.display = "none";
-    this.addCharSelectElements();
+    fetch(this.loadCharUrl)
+      .then((response) => response.json())
+      .then((data: Array<{ charName: string }>) => {
+        this.addCharSelectElements(data);
+      });
   }
 
   public showCharSelection(): void {
     this.selectionView.style.display = "";
   }
 
-  protected addCharSelectElements(): void {
+  protected addCharSelectElements(data: Array<{ charName: string }>): void {
     this.addTitle();
     this.horizontalLine();
-    this.initSelection();
+    this.initSelection(data);
     this.horizontalLine();
-    this.addCharButton();
-    this.confirmButton();
+    this.addRemoveButtons();
+    this.horizontalLine();
+    this.returnStartButtons();
   }
 
   protected addTitle(): void {
@@ -57,28 +58,20 @@ export class CharSelection {
     div.appendChild(text);
   }
 
-  public initSelection(): void {
+  public initSelection(data: Array<{ charName: string }>): void {
     const selectionContainer = this.doc.createElement("div");
     selectionContainer.id = "eventsContainer";
     this.selectionView.appendChild(selectionContainer);
     this.addSelectonText(selectionContainer);
     this.charSelection.id = "eventSelection";
 
-    const defaultOption = this.doc.createElement("option");
-    defaultOption.value = "";
-    defaultOption.text = "Select Char";
-    defaultOption.disabled = true;
-    defaultOption.selected = true;
-    this.selectedChar = defaultOption.value;
-    this.charSelection.appendChild(defaultOption);
-
-    const charList = this.characterList;
-    for (const option in charList) {
+    this.defaultSelectOption();
+    data.forEach((name: { charName: string }) => {
       const createOption = this.doc.createElement("option");
-      createOption.value = charList[option].toUpperCase();
-      createOption.text = charList[option].toUpperCase();
+      createOption.value = name.charName;
+      createOption.text = name.charName;
       this.charSelection.appendChild(createOption);
-    }
+    });
 
     selectionContainer?.appendChild(this.charSelection);
 
@@ -87,51 +80,100 @@ export class CharSelection {
     });
   }
 
+  protected defaultSelectOption(): void {
+    const defaultOption = this.doc.createElement("option");
+    defaultOption.value = "";
+    defaultOption.text = "Select Char";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    this.selectedChar = defaultOption.value;
+    this.charSelection.appendChild(defaultOption);
+  }
+
+  protected clearSelection(): void {
+    while (this.charSelection.firstChild) {
+      this.charSelection.removeChild(this.charSelection.firstChild);
+    }
+  }
+
   public updateCharSelection(): void {
-    const url = "https://firstservice-emyq.onrender.com/loadCharacters";
-    this.charSelection.innerHTML = "";
-    this.characterList = [];
-    fetch(url)
+    this.clearSelection();
+    this.defaultSelectOption();
+    fetch(this.loadCharUrl)
       .then((response) => response.json())
       .then((data) => {
         data.forEach((name: { charName: string }) => {
-          this.characterList.push(name.charName);
-        });
-        const chars = this.characterList;
-        for (const option in this.characterList) {
           const createOption = this.doc.createElement("option");
-          createOption.value = this.characterList[option].toUpperCase();
-          createOption.text = this.characterList[option].toUpperCase();
+          createOption.value = name.charName;
+          createOption.text = name.charName;
           this.charSelection.appendChild(createOption);
-        }
+        });
       });
   }
 
+  protected addRemoveButtons(): void {
+    const buttonDiv = this.doc.createElement("div");
+    buttonDiv.id = "charButtons";
+    this.selectionView.appendChild(buttonDiv);
+    this.addCharButton();
+    this.removeCharButton();
+  }
+
+  protected returnStartButtons(): void {
+    const buttonDiv = this.doc.createElement("div");
+    buttonDiv.id = "startReturn";
+    this.selectionView.appendChild(buttonDiv);
+    this.confirmButton();
+    this.returnButton();
+  }
+
   protected addCharButton(): void {
+    const div = this.doc.getElementById("charButtons") as HTMLDivElement;
     const button = this.doc.createElement("div");
-    button.id = "start";
+    button.id = "addChar";
     button.innerHTML = "Add Character";
-    this.selectionView.appendChild(button);
+    div.appendChild(button);
 
     button.addEventListener("pointerup", () => {
       new AddCharPopup(
         "Add a character",
         this.selectionView,
         "CONFIRM",
-        true,
+        "addCharacter",
         () => {
           this.updateCharSelection();
         },
-        this.characterList
+        "adding"
+      );
+    });
+  }
+
+  protected removeCharButton(): void {
+    const div = this.doc.getElementById("charButtons") as HTMLDivElement;
+    const button = this.doc.createElement("div");
+    button.id = "addChar";
+    button.innerHTML = "remove Character";
+    div.appendChild(button);
+    button.addEventListener("pointerup", () => {
+      new AddCharPopup(
+        "Remove a character",
+        this.selectionView,
+        "DELETE",
+        "removeCharacter",
+        () => {
+          this.updateCharSelection();
+        },
+        "removed"
       );
     });
   }
 
   protected confirmButton(): void {
+    const div = this.doc.getElementById("startReturn") as HTMLDivElement;
     const button = this.doc.createElement("div");
-    button.id = "start";
+    button.id = "startApp";
     button.innerHTML = "START APP";
-    this.selectionView.appendChild(button);
+    div.appendChild(button);
 
     button.addEventListener("pointerup", () => {
       if (this.selectedChar != "") {
@@ -140,8 +182,26 @@ export class CharSelection {
     });
   }
 
+  protected returnButton(): void {
+    const div = this.doc.getElementById("startReturn") as HTMLDivElement;
+    const button = this.doc.createElement("div");
+    button.id = "return";
+    button.innerHTML = "RETURN";
+    div.appendChild(button);
+
+    button.addEventListener("pointerup", () => {
+      this.hideCharSelectionView();
+      this.showMainScreen();
+    });
+  }
+
   public hideCharSelectionView(): void {
     this.selectionView.style.display = "none";
+  }
+
+  protected showMainScreen(): void {
+    const mainDiv = document.getElementById("mainDiv") as HTMLDivElement;
+    mainDiv.style.display = "";
   }
 }
 

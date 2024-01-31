@@ -8,22 +8,22 @@ export class MainView {
   protected selectionUrl: string;
   protected selectOptions: Array<string>;
   public characterList: Array<string>;
-  public charfetchUrl: string;
-
   public charSelectView!: CharSelection;
+  protected clicked = false;
 
-  constructor(document: Document) {
+  constructor() {
     this.selectOptions = [];
-    this.selectionUrl = "https://firstservice-emyq.onrender.com/loadEvents";
+    this.selectionUrl =
+      /*"http://127.0.0.1:5000/loadEvents"; */ "https://firstservice-emyq.onrender.com/loadEvents";
     this.doc = document;
     this.background = this.doc.createElement("div");
     this.background.id = "background";
     this.doc.body.appendChild(this.background);
     this.background.style.background = "url('images/background.png')";
     this.mainDiv = this.doc.createElement("div");
+    this.mainDiv.id = "mainDiv";
     this.background.appendChild(this.mainDiv);
     this.characterList = [];
-    this.charfetchUrl = "https://firstservice-emyq.onrender.com/loadCharacters";
     fetch(this.selectionUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -32,10 +32,12 @@ export class MainView {
         });
         this.addMainDivElements();
       });
+
+    this.charSelectView = this.addCharSelection();
   }
 
   protected addCharSelection(): CharSelection {
-    return new CharSelection(this.background, this.characterList, this.doc);
+    return new CharSelection(this.background, this.doc);
   }
 
   public addMainDivElements(): void {
@@ -105,35 +107,28 @@ export class MainView {
     button.id = "start";
     button.innerHTML = "START APP";
     this.mainDiv.appendChild(button);
-    let clicked = false;
     button.addEventListener("pointerup", () => {
-      if (clicked) return;
+      if (this.clicked) return;
       if (this.selectedOption != "") {
-        clicked = true;
-        fetch(this.charfetchUrl)
-          .then((response) => response.json())
-          .then((data) => {
-            data.forEach((name: { charName: string }) => {
-              this.characterList.push(name.charName);
-            });
-            this.charSelectView = this.addCharSelection();
-            this.hideCabalEventsScreen();
-          });
+        this.clicked = true;
+        this.afterClick();
+        this.hideCabalEventsScreen();
       }
     });
+  }
+
+  async delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async afterClick() {
+    await this.delay(1000);
+    this.clicked = false;
   }
 
   public hideCabalEventsScreen(): void {
     this.mainDiv.style.display = "none";
     this.charSelectView.showCharSelection();
-  }
-
-  public getcharsList() {
-    return this.characterList;
-  }
-
-  public setcharacters(charsList: Array<string>) {
-    this.characterList = charsList;
   }
 }
 
