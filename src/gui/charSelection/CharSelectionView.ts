@@ -94,8 +94,8 @@ export class CharSelection {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        data.forEach((name: string) => {
-          this.characterList.push(name);
+        data.forEach((name: { charName: string }) => {
+          this.characterList.push(name.charName);
         });
         const chars = this.characterList;
         for (const option in this.characterList) {

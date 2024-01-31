@@ -113,8 +113,8 @@ export class MainView {
         fetch(this.charfetchUrl)
           .then((response) => response.json())
           .then((data) => {
-            data.forEach((name: string) => {
-              this.characterList.push(name);
+            data.forEach((name: { charName: string }) => {
+              this.characterList.push(name.charName);
             });
             this.charSelectView = this.addCharSelection();
             this.hideCabalEventsScreen();
