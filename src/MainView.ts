@@ -104,8 +104,8 @@ export class MainView {
 
   public confirmButton(): void {
     const button = this.doc.createElement("div");
-    button.id = "start";
-    button.innerHTML = "START APP";
+    button.id = "Continue";
+    button.innerHTML = "Continue";
     this.mainDiv.appendChild(button);
     button.addEventListener("pointerup", () => {
       if (this.clicked) return;

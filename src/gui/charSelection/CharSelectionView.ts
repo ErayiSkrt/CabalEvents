@@ -51,19 +51,11 @@ export class CharSelection {
     this.selectionView.appendChild(line);
   }
 
-  public addSelectonText(div: HTMLDivElement): void {
-    const text = this.doc.createElement("h2");
-    text.id = "selectText";
-    text.innerHTML = "SELECT Character";
-    div.appendChild(text);
-  }
-
   public initSelection(data: Array<{ charName: string }>): void {
     const selectionContainer = this.doc.createElement("div");
     selectionContainer.id = "eventsContainer";
     this.selectionView.appendChild(selectionContainer);
-    this.addSelectonText(selectionContainer);
-    this.charSelection.id = "eventSelection";
+    this.charSelection.id = "charSelection";
 
     this.defaultSelectOption();
     data.forEach((name: { charName: string }) => {
