@@ -1,14 +1,17 @@
+import { LunarEvent } from "./gui/LunarEvent/LunarEvent";
 import { CharSelection } from "./gui/charSelection/CharSelectionView";
 
 export class MainView {
   protected doc: Document;
   protected background: HTMLDivElement;
-  protected selectedOption = "";
+  protected selectedEvent;
   protected mainDiv: HTMLDivElement;
   protected selectionUrl: string;
   protected selectOptions: Array<string>;
   public characterList: Array<string>;
   public charSelectView!: CharSelection;
+  public lunarView!: LunarEvent;
+
   protected clicked = false;
 
   constructor() {
@@ -24,6 +27,8 @@ export class MainView {
     this.mainDiv.id = "mainDiv";
     this.background.appendChild(this.mainDiv);
     this.characterList = [];
+    this.selectedEvent = document.createElement("p");
+    this.selectedEvent.id = "selectedEvent";
     fetch(this.selectionUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -34,10 +39,19 @@ export class MainView {
       });
 
     this.charSelectView = this.addCharSelection();
+    this.lunarView = this.addLunarEvent();
+    //document.addEventListener("startEvent", this.showLunarEvent.bind(this));
   }
+
+  /*protected showLunarEvent(): void{
+    this.lunarView.
+  }*/
 
   protected addCharSelection(): CharSelection {
     return new CharSelection(this.background, this.doc);
+  }
+  protected addLunarEvent(): LunarEvent {
+    return new LunarEvent(this.background);
   }
 
   public addMainDivElements(): void {
@@ -85,6 +99,7 @@ export class MainView {
     defaultOption.disabled = true;
     defaultOption.selected = true;
     eventSelection.appendChild(defaultOption);
+    this.selectedEvent.nodeValue = defaultOption.value;
 
     let count = 0;
     for (const option in this.selectOptions) {
@@ -98,7 +113,7 @@ export class MainView {
     selectionContainer?.appendChild(eventSelection);
 
     eventSelection.addEventListener("change", () => {
-      this.selectedOption = eventSelection.value;
+      this.selectedEvent.nodeValue = eventSelection.value;
     });
   }
 
@@ -109,7 +124,7 @@ export class MainView {
     this.mainDiv.appendChild(button);
     button.addEventListener("pointerup", () => {
       if (this.clicked) return;
-      if (this.selectedOption != "") {
+      if (this.selectedEvent.nodeValue != "") {
         this.clicked = true;
         this.afterClick();
         this.hideCabalEventsScreen();

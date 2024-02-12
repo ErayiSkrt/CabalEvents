@@ -68,6 +68,14 @@
   border-bottom: 5px solid gray;
   margin: 20 0 20 0;
 }
+.verticalLine {
+  position: absolute;
+  /*left: 50%;*/
+  transform: translateX(-50%);
+  height: 100%;
+  width: 5px;
+  background-color: gray;
+}
 #eventsContainer {
   display: flex;
   flex-direction: row;
@@ -109,6 +117,17 @@
   font-weight: normal;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+}
+#title1 {
+  color: red;
+  margin: 0;
+  padding: 10px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 28px;
+  font-weight: normal;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 #selectText {
   color: rgb(34, 13, 224);
@@ -234,4 +253,22 @@
 }
 #closeButton:hover {
   color: green;
+}
+#splitDiv {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  flex-direction: row;
+}
+#leftSide,
+#rightSide {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  border: 2px solid blue;
+}
+#leftDiv {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
 }

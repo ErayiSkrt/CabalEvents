@@ -5,7 +5,7 @@ export class CharSelection {
   protected bkgr: HTMLDivElement;
   protected doc: Document;
   public selectionView: HTMLDivElement;
-  protected selectedChar: string = "";
+  protected selectedChar;
   protected charSelection: HTMLSelectElement;
   protected loadCharUrl =
     /*"http://127.0.0.1:5000/loadCharacters";*/ "https://firstservice-emyq.onrender.com/loadCharacters";
@@ -16,11 +16,17 @@ export class CharSelection {
     this.selectionView = this.doc.createElement("div");
     this.bkgr.appendChild(this.selectionView);
     this.selectionView.style.display = "none";
+    this.selectedChar = document.createElement("option");
+    this.selectedChar.id = "selectedChar";
     fetch(this.loadCharUrl)
       .then((response) => response.json())
       .then((data: Array<{ charName: string }>) => {
         this.addCharSelectElements(data);
       });
+    document.addEventListener(
+      "backToCharSelect",
+      this.showCharSelection.bind(this)
+    );
   }
 
   public showCharSelection(): void {
@@ -68,7 +74,7 @@ export class CharSelection {
     selectionContainer?.appendChild(this.charSelection);
 
     this.charSelection.addEventListener("change", () => {
-      this.selectedChar = this.charSelection.value;
+      this.selectedChar.value = this.charSelection.value;
     });
   }
 
@@ -78,7 +84,7 @@ export class CharSelection {
     defaultOption.text = "Select Char";
     defaultOption.disabled = true;
     defaultOption.selected = true;
-    this.selectedChar = defaultOption.value;
+    this.selectedChar.value = defaultOption.value;
     this.charSelection.appendChild(defaultOption);
   }
 
@@ -168,8 +174,9 @@ export class CharSelection {
     div.appendChild(button);
 
     button.addEventListener("pointerup", () => {
-      if (this.selectedChar != "") {
+      if (this.selectedChar.value != "") {
         this.hideCharSelectionView();
+        this.doc.dispatchEvent(new Event("startEvent"));
       }
     });
   }
